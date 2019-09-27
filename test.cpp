@@ -6,14 +6,14 @@
 #include <assert.h>
 #include <vector>
 
-#include "SDL2/SDL.h"
+//#include "SDL2/SDL.h"
 
 #define JD_COROUTINE_IMPL
 #include "coroutine.h"
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[i]))
 
-float dt;
+double dt;
 volatile bool should_quit = false;
 
 void co_counter_quitter(JD_Coroutine * co) {
@@ -152,7 +152,7 @@ int main() {
     auto runner = jd_coroutine_runner_init(0, 0);
     jd_coroutine_begin(&runner, co_loading_bar);
 
-    double target_delta = 1/60.0;
+    double target_delta = 1.0/60.0;
     dt = target_delta;
 
     double seconds_accum = 0;
@@ -160,20 +160,20 @@ int main() {
 
     int num_frames_remaining = 20000;
     double dt_avg = 0;
-    int dt_num;
+    int dt_num = 0;
     while(!should_quit) {
         std::this_thread::sleep_for(std::chrono::milliseconds(8));
 
         auto startT = std::chrono::high_resolution_clock::now();
 
         {
-            auto start = SDL_GetPerformanceCounter();
+          //  auto start = SDL_GetPerformanceCounter();
 
             jd_coroutine_runner_tick(&runner, dt);
 
-            auto delta = SDL_GetPerformanceCounter() - start;
-            seconds_accum += (double)delta / (double)SDL_GetPerformanceFrequency();
-            num_entries += 1;
+         //   auto delta = SDL_GetPerformanceCounter() - start;
+         //   seconds_accum += (double)delta / (double)SDL_GetPerformanceFrequency();
+         //   num_entries += 1;
         }
 
         {
